@@ -765,13 +765,13 @@ public class ImprovedRtspStreamingService : IPlayerRegistry, IImprovedRtspStream
     {
         var baseCaching = options.NetworkCaching;
 
-        // TCP는 더 많은 버퍼링 필요
+        // TCP는 약간의 추가 버퍼링 필요 (1.2배)
         if (options.UseTcp)
         {
-            baseCaching = (int)(baseCaching * 1.5);
+            baseCaching = (int)(baseCaching * 1.2);
         }
 
-        return Math.Min(baseCaching, 2000); // 최대 2초
+        return Math.Min(baseCaching, 1000); // 최대 1초 (빠른 초기 연결)
     }
 
     private void RegisterEventHandlers(ImprovedStreamingContext context)

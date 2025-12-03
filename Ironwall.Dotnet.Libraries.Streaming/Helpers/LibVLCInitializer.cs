@@ -34,17 +34,21 @@ public static class LibVLCInitializer
             {
                 Core.Initialize();
 
+                var networkCaching = setupModel?.DefaultNetworkCaching ?? 150;
+                var clockJitter = setupModel?.ClockJitterMs ?? 500;
+                var clockSync = (setupModel?.EnableClockSync ?? true) ? 1 : 0;
+
                 var options = new List<string>
                     {
                         "--verbose=1",
                         "--no-video-title-show",
                         "--no-snapshot-preview",
                         "--no-disable-screensaver",
-                        "--network-caching=" + (setupModel?.DefaultNetworkCaching ?? 300),
-                        "--live-caching=" + (setupModel?.DefaultNetworkCaching ?? 300),
-                        "--file-caching=" + (setupModel?.DefaultNetworkCaching ?? 300),
-                        "--clock-jitter=0",
-                        "--clock-synchro=0"
+                        $"--network-caching={networkCaching}",
+                        $"--live-caching={networkCaching}",
+                        $"--file-caching={networkCaching}",
+                        $"--clock-jitter={clockJitter}",
+                        $"--clock-synchro={clockSync}"
                     };
 
                 // 하드웨어 가속

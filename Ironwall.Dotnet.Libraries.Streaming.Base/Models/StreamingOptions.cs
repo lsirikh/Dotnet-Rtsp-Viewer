@@ -17,21 +17,21 @@ namespace Ironwall.Dotnet.Libraries.Streaming.Base.Models;
 public class StreamingOptions : BaseModel
 {
     // 네트워크 설정
-    public int NetworkCaching { get; set; } = 300;
+    public int NetworkCaching { get; set; } = 150;
     public bool UseTcp { get; set; } = true;
-    public int FrameBufferSize { get; set; } = 100000;
+    public int FrameBufferSize { get; set; } = 250000;
     public int ConnectionTimeoutSeconds { get; set; } = 10;
 
     // 성능 설정
     public bool UseHardwareAcceleration { get; set; } = true;
-    public bool AllowFrameSkip { get; set; } = true;
+    public bool AllowFrameSkip { get; set; } = false;
     public int MaxDecodingThreads { get; set; } = 0; // 0 = auto
     public bool EnableMulticast { get; set; } = false;
 
     // 재연결 설정
     public bool EnableAutoReconnect { get; set; } = true;
-    public int MaxReconnectAttempts { get; set; } = 3;
-    public int ReconnectDelaySeconds { get; set; } = 5;
+    public int MaxReconnectAttempts { get; set; } = 5;
+    public int ReconnectDelaySeconds { get; set; } = 2;
     public bool ExponentialBackoff { get; set; } = true;
 
     // 오디오 설정
@@ -52,12 +52,31 @@ public class StreamingOptions : BaseModel
     public bool EnableDebugLogging { get; set; } = false;
     public bool EnableStatistics { get; set; } = true;
 
+    // 클럭 동기화 설정
+    public int ClockJitterMs { get; set; } = 500;
+    public bool EnableClockSync { get; set; } = true;
+
     /// <summary>
     /// 기본 옵션 생성
     /// </summary>
     public static StreamingOptions CreateDefault()
     {
         return new StreamingOptions();
+    }
+
+    /// <summary>
+    /// 빠른 연결 옵션 생성 (초기 연결 속도 최적화)
+    /// </summary>
+    public static StreamingOptions CreateFastConnect()
+    {
+        return new StreamingOptions
+        {
+            NetworkCaching = 100,
+            FrameBufferSize = 150000,
+            ConnectionTimeoutSeconds = 5,
+            ClockJitterMs = 300,
+            EnableClockSync = true,
+        };
     }
 
     /// <summary>
@@ -71,6 +90,23 @@ public class StreamingOptions : BaseModel
             FrameBufferSize = 50000,
             AllowFrameSkip = true,
             EnableMemoryOptimization = true,
+        };
+    }
+
+    /// <summary>
+    /// 안정성 중시 옵션 생성 (연결 안정성 최적화)
+    /// </summary>
+    public static StreamingOptions CreateStable()
+    {
+        return new StreamingOptions
+        {
+            NetworkCaching = 300,
+            FrameBufferSize = 300000,
+            MaxReconnectAttempts = 5,
+            ReconnectDelaySeconds = 3,
+            ExponentialBackoff = true,
+            EnableAutoReconnect = true,
+            ClockJitterMs = 700,
         };
     }
 
@@ -131,6 +167,9 @@ public class StreamingOptions : BaseModel
             EnableDebugLogging = this.EnableDebugLogging,
             EnableStatistics = this.EnableStatistics,
 
+            // 클럭 동기화 설정
+            ClockJitterMs = this.ClockJitterMs,
+            EnableClockSync = this.EnableClockSync,
         };
     }
 }

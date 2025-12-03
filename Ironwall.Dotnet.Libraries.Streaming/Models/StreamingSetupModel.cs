@@ -25,8 +25,10 @@ public interface IStreamingSetupModel
     int ContextPoolSize { get; set; }
     bool EnableFrameSkipping { get; set; }
     int MaxFrameSkip { get; set; }
-    bool IsAutoDiscard { get; set; } 
+    bool IsAutoDiscard { get; set; }
     int TimeoutSeconds { get; set; }
+    int ClockJitterMs { get; set; }
+    bool EnableClockSync { get; set; }
 }
 
 /// <summary>
@@ -54,7 +56,11 @@ public class StreamingSetupModel : IStreamingSetupModel
     public int InactiveStreamTimeoutMinutes { get; set; } = 30;
 
     public bool IsAutoDiscard { get; set; } = true;
-    public int TimeoutSeconds { get; set; } = 10;
+    public int TimeoutSeconds { get; set; } = 15;
+
+    // 클럭 동기화 설정
+    public int ClockJitterMs { get; set; } = 500;
+    public bool EnableClockSync { get; set; } = true;
 
     /// <summary>
     /// 기본 생성자
@@ -83,6 +89,8 @@ public class StreamingSetupModel : IStreamingSetupModel
             MaxFrameSkip = model.MaxFrameSkip;
             IsAutoDiscard = model.IsAutoDiscard;
             TimeoutSeconds = model.TimeoutSeconds;
+            ClockJitterMs = model.ClockJitterMs;
+            EnableClockSync = model.EnableClockSync;
         }
     }
 
