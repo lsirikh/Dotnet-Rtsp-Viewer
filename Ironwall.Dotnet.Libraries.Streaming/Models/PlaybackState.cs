@@ -67,5 +67,20 @@ public enum PlaybackState
     /// <summary>
     /// 감시 제한 상태
     /// </summary>
-    Restricted = 10
+    Restricted = 10,
+
+    /// <summary>
+    /// 프리워밍 중 (Pre-Connection 준비)
+    /// </summary>
+    Prewarming = 11,
+
+    /// <summary>
+    /// 준비 완료 (연결 준비됨, 재생 대기)
+    /// </summary>
+    Ready = 12,
+
+    /// <summary>
+    /// 성능 저하 상태 (프레임 드롭 발생 중이지만 재생 중)
+    /// </summary>
+    Degraded = 13
 }
